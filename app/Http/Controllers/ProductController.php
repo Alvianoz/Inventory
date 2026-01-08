@@ -11,6 +11,7 @@ use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use chillerlan\QRCode\Output\QROutputInterface;
 use chillerlan\QRCode\Common\EccLevel;
+use App\Models\Segment;
 
 class ProductController extends Controller
 {
@@ -28,8 +29,9 @@ class ProductController extends Controller
         }
 
         $products = $query->latest()->get();
+        $segments = Segment::all();
 
-        return view('manage', compact('products'));
+        return view('manage', compact('products', 'segments'));
     }
 
     // Menyimpan produk baru
@@ -39,6 +41,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'stock' => 'required|integer|min:0',
             'category' => 'nullable|string',
+            'segment_id' => 'nullable|exists:segments,id',
             'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -52,6 +55,7 @@ class ProductController extends Controller
             'stock' => $request->stock,
             'category' => $request->category,
             'image_path' => $path,
+            'segment_id' => $request->segment_id,
         ]);
 
         return back()->with('success', 'Barang berhasil ditambahkan!');
@@ -63,9 +67,10 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'nullable|string',
+            'segment_id' => 'nullable|exists:segments,id',
         ]);
 
-        $product->update($request->only('name', 'category'));
+        $product->update($request->only('name', 'category', 'segment_id'));
 
         return back()->with('success', 'Barang berhasil diperbarui!');
     }

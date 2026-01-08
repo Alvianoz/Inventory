@@ -44,6 +44,7 @@
                 <i class="fa-solid fa-qrcode text-2xl"></i>
                 <span class="text-lg">Scan QR Code untuk Kembalikan</span>
             </button>
+            <p class="mt-3 text-sm text-gray-500">Tip: Anda juga dapat <strong>scan QR segmen</strong> (label lokasi) untuk membuka halaman pengembalian per segmen.</p>
         </div>
 
         {{-- Active Loans List --}}
@@ -67,16 +68,11 @@
                                     <p class="text-sm text-gray-600">
                                         <span class="font-semibold">Durasi:</span> {{ $loan->duration }} hari
                                     </p>
+                                    <p class="text-sm text-gray-600">
+                                        <span class="font-semibold">Segmen:</span> {{ $loan->products->first()->segment ? $loan->products->first()->segment->name : '-' }}
+                                    </p>
                                 </div>
                             </div>
-                            <form action="{{ route('loan.return.submit') }}" method="POST" class="mt-3">
-                                @csrf
-                                <input type="hidden" name="transaction_id" value="{{ $loan->id }}">
-                                <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:shadow-lg transition-all flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-rotate-left"></i>
-                                    <span>Ajukan Pengembalian</span>
-                                </button>
-                            </form>
                         </div>
                     @endforeach
                 </div>
@@ -162,14 +158,26 @@
                             const url = new URL(decodedText);
                             const productId = url.searchParams.get('qr_product');
 
+                            // Jika QR berisi ID produk (format QR lama)
                             if (productId) {
                                 fetchLoanAndSubmit(productId);
                                 stopQrScanner();
                                 qrScannerModal.classList.add('hidden');
                                 document.body.style.overflow = 'auto';
-                            } else {
-                                showNotification('QR Code tidak valid!', 'error');
+                                return;
                             }
+
+                            // Jika QR adalah segmen yang mengarah ke halaman pengembalian segmen
+                            // Pastikan origin sama atau path mengandung /return/segment untuk safety
+                            if ((url.origin === window.location.origin && url.pathname.includes('/return/segment')) || url.pathname.includes('/return/segment')) {
+                                stopQrScanner();
+                                qrScannerModal.classList.add('hidden');
+                                document.body.style.overflow = 'auto';
+                                window.location.href = url.href;
+                                return;
+                            }
+
+                            showNotification('QR Code tidak valid atau tidak terkait dengan pengembalian!', 'error');
                         } catch (e) {
                             showNotification('Format QR Code tidak valid!', 'error');
                         }

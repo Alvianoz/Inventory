@@ -407,7 +407,9 @@
                     (decodedText, decodedResult) => {
                         // Extract product ID from URL
                         try {
-                            const url = new URL(decodedText);
+                            // Support absolute and relative URLs (debug logging added)
+                            const url = new URL(decodedText, window.location.origin);
+                            console.debug('QR decoded:', decodedText, '=>', url.href);
                             const productId = url.searchParams.get('qr_product');
 
                             if (productId) {

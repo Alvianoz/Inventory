@@ -142,7 +142,7 @@
         <div class="flex gap-6">
             <!-- Sidebar -->
             <aside id="sidebar"
-                class="fixed lg:sticky top-0 left-0 h-screen lg:h-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 z-40 transition-transform duration-300 w-64 -translate-x-full lg:translate-x-0">
+                class="fixed lg:sticky top-16 lg:top-0 left-0 h-screen lg:h-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 z-40 transition-transform duration-300 w-64 -translate-x-full lg:translate-x-0">
                 <!-- Close Button (Mobile Only) -->
                 <button id="sidebar-close" class="lg:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100">
                     <i class="fa-solid fa-times text-gray-600"></i>
@@ -194,6 +194,12 @@
                             <i class="fa-solid fa-users-cog text-lg"></i>
                             <span class="font-medium">Pengguna</span>
                         </a>
+
+                        <a href="{{ route('segments.index') }}"
+                            class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->is('segments*') ? 'active' : 'text-gray-600 hover:bg-gray-100' }}">
+                            <i class="fa-solid fa-map-location-dot text-lg"></i>
+                            <span class="font-medium">Segmen</span>
+                        </a>
                     @endif
 
                     <a href="/profile"
@@ -216,7 +222,7 @@
             </aside>
 
             <!-- Main Content -->
-            <main class="flex-1">
+            <main class="flex-1 pt-16 lg:pt-8">
                 @yield('content')
             </main>
         </div>

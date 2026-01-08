@@ -12,9 +12,92 @@ use Carbon\Carbon;
 class LoanController extends Controller
 {
     // Menampilkan halaman peminjaman
-    public function borrow()
+    public function borrow(Request $request)
     {
-        return view('loan.borrow');
+        $query = Product::query();
+
+        if ($request->has('search') && $request->search) {
+            $search = $request->input('search');
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        if ($request->has('category') && $request->category) {
+            $categoryName = str_replace('-', ' ', $request->category);
+            $query->where('category', 'like', '%' . $categoryName . '%');
+        }
+
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'name_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'stock':
+                $query->orderBy('stock', 'desc');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $products = $query->paginate(12)->withQueryString();
+
+        // build categories (same as ShopController)
+        $categoriesFromDB = Product::select('category')
+            ->selectRaw('COUNT(*) as count')
+            ->whereNotNull('category')
+            ->where('category', '!=', '')
+            ->groupBy('category')
+            ->orderBy('count', 'desc')
+            ->get();
+
+        $categories = [];
+        foreach ($categoriesFromDB as $cat) {
+            $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $cat->category), '-'));
+            $icons = [
+                'makanan' => 'fa-solid fa-utensils',
+                'minuman' => 'fa-solid fa-coffee',
+                'snack' => 'fa-solid fa-cookie-bite',
+                'elektronik' => 'fa-solid fa-laptop',
+                'pakaian' => 'fa-solid fa-tshirt',
+                'sepatu' => 'fa-solid fa-shoe-prints',
+                'tas' => 'fa-solid fa-shopping-bag',
+                'aksesoris' => 'fa-solid fa-ring',
+                'kosmetik' => 'fa-solid fa-palette',
+                'olahraga' => 'fa-solid fa-dumbbell',
+                'buku' => 'fa-solid fa-book',
+                'mainan' => 'fa-solid fa-puzzle-piece',
+            ];
+            $categoryLower = strtolower($cat->category);
+            $icon = 'fa-solid fa-tag';
+            foreach ($icons as $key => $ic) {
+                if (strpos($categoryLower, $key) !== false) {
+                    $icon = $ic;
+                    break;
+                }
+            }
+
+            $categories[] = [
+                'name' => $cat->category,
+                'slug' => $slug,
+                'count' => $cat->count,
+                'icon' => $icon
+            ];
+        }
+
+        return view('loan.borrow', compact('products', 'categories'));
     }
 
     // API untuk mendapatkan info produk via QR

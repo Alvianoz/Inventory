@@ -96,6 +96,7 @@
 
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-gray-800 line-clamp-2 mb-2">{{ $product->name }}</h3>
+                            <div class="text-sm text-gray-500 mb-1">Segmen: {{ $product->segment ? $product->segment->name : '-' }}</div>
                             <div class="flex justify-end items-center mb-4">
                                 <p
                                     class="text-sm font-semibold {{ $product->stock > 5 ? 'text-gray-500' : ($product->stock > 0 ? 'text-orange-500' : 'text-red-500') }}">
@@ -110,7 +111,8 @@
                                         class="edit-btn flex-1 bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 text-sm py-2.5 px-3 rounded-xl hover:shadow-md transition-all font-medium border border-blue-100"
                                         data-id="{{ $product->id }}" data-name="{{ $product->name }}"
                                         data-stock="{{ $product->stock }}"
-                                        data-category="{{ $product->category }}">
+                                        data-category="{{ $product->category }}"
+                                        data-segment-id="{{ $product->segment_id }}">
                                         <i class="fa-solid fa-edit mr-1"></i>Edit
                                     </button>
                                     <button
@@ -192,6 +194,17 @@
                                 <input type="text" id="category_tambah" name="category" class="input-field"
                                     placeholder="Elektronik, Peralatan, dll">
                             </div>
+
+                            <div>
+                                <label for="segment_tambah" class="block text-sm font-medium text-gray-700 mb-2">Segmen Lokasi</label>
+                                <select id="segment_tambah" name="segment_id" class="input-field">
+                                    <option value="">-- Pilih Segmen --</option>
+                                    @foreach($segments as $segment)
+                                        <option value="{{ $segment->id }}">{{ $segment->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div>
                                 <label for="image_path_tambah"
                                     class="block text-sm font-medium text-gray-700 mb-2">Gambar</label>
@@ -224,6 +237,17 @@
                                     class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
                                 <input type="text" id="category_edit" name="category" class="input-field">
                             </div>
+
+                            <div>
+                                <label for="segment_edit" class="block text-sm font-medium text-gray-700 mb-2">Segmen Lokasi</label>
+                                <select id="segment_edit" name="segment_id" class="input-field">
+                                    <option value="">-- Pilih Segmen --</option>
+                                    @foreach($segments as $segment)
+                                        <option value="{{ $segment->id }}">{{ $segment->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <button type="submit"
                                 class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-3 rounded-xl hover:shadow-lg transition-all">
                                 <i class="fa-solid fa-save mr-2"></i>Update Barang
@@ -307,6 +331,17 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
                                 <input type="text" name="category" class="input-field" placeholder="Makanan, dll">
                             </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Segmen Lokasi</label>
+                                <select name="segment_id" class="input-field">
+                                    <option value="">-- Pilih Segmen --</option>
+                                    @foreach($segments as $segment)
+                                        <option value="{{ $segment->id }}">{{ $segment->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Gambar</label>
                                 <input type="file" name="image_path" accept="image/*"
@@ -333,6 +368,17 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
                                 <input type="text" id="mobile_category_edit" name="category" class="input-field">
                             </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Segmen Lokasi</label>
+                                <select id="mobile_segment_edit" name="segment_id" class="input-field">
+                                    <option value="">-- Pilih Segmen --</option>
+                                    @foreach($segments as $segment)
+                                        <option value="{{ $segment->id }}">{{ $segment->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <button type="submit"
                                 class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-3 rounded-xl">
                                 <i class="fa-solid fa-save mr-2"></i>Update Barang
@@ -469,15 +515,17 @@
                 });
             });
 
-            function populateEditForm(id, name, price, category) {
+            function populateEditForm(id, name, price, category, segmentId) {
                 editForm.action = `/products/${id}`;
                 editForm.querySelector('#name_edit').value = name;
                 editForm.querySelector('#category_edit').value = category || '';
+                document.getElementById('segment_edit').value = segmentId || '';
                 document.getElementById('edit-instruction').classList.add('hidden');
 
                 mobileEditForm.action = `/products/${id}`;
                 document.getElementById('mobile_name_edit').value = name;
                 document.getElementById('mobile_category_edit').value = category || '';
+                document.getElementById('mobile_segment_edit').value = segmentId || '';
                 document.getElementById('mobile-edit-instruction').classList.add('hidden');
             }
 
@@ -501,7 +549,8 @@
                         button.dataset.id,
                         button.dataset.name,
                         0,
-                        button.dataset.category
+                        button.dataset.category,
+                        button.dataset.segmentId
                     );
 
                     if (window.innerWidth < 1024) {

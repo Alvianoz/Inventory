@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminLoanController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SegmentController;
 
 // ... (Route Login & Register) ...
 Route::get('/', function () {
@@ -64,10 +65,23 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:pengelola'])->group(function () {
         Route::get('/manage-users', [UserController::class, 'index'])->name('users.index');
         Route::put('/users/{user}/update-role', [UserController::class, 'updateRole'])->name('users.update.role');
+
+        // Segments CRUD (pengelola)
+        Route::resource('segments', SegmentController::class)->except(['show']);
+
+        // Segmen QR (pengelola)
+        Route::get('/segments/{id}/qr', [SegmentController::class, 'showQR'])->name('segments.qr.show');
     });
+
+    // Return per segment (all authenticated users can access, staff will see confirm actions)
+    Route::get('/return/segment/{segment}', [SegmentController::class, 'returnPage'])->name('segments.return');
 });
 
 // API Routes untuk QR Scanner (tidak perlu auth karena diakses via AJAX)
 Route::get('/api/product/{id}', [LoanController::class, 'getProductByQR']);
 Route::get('/api/loan/{productId}', [LoanController::class, 'getLoanByQR']);
 Route::get('/api/admin/loan/{productId}/{transactionId}', [AdminLoanController::class, 'getLoanTransactionByQR']);
+// API untuk QR segmen (mem-return URL untuk redirect ke page pengembalian segmen)
+Route::get('/api/segment/{id}', [SegmentController::class, 'getByQR']);
+// API: cari transaksi returning untuk produk di segmen tertentu (dipakai saat scan di halaman segmen)
+Route::get('/api/segment/{segmentId}/product/{productId}', [SegmentController::class, 'getReturningByProduct']);
