@@ -4,6 +4,94 @@
 
 @section('content')
 <div class="space-y-6">
+    {{-- Dashboard Title --}}
+    <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+            <i class="fa-solid fa-house text-white text-xl"></i>
+        </div>
+        <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Dashboard
+        </h1>
+    </div>
+
+    {{-- Hero / Quick Actions for role user --}}
+    @if(Auth::user()->role === 'user')
+    <div class="mt-6 bg-transparent">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <div class="grid grid-cols-1 gap-4">
+                <div>
+                    <p class="text-xl font-semibold">Halo, {{ explode(' ', trim(Auth::user()->name))[0] }} <span class="wave">👋</span></p>
+                    <p class="text-sm text-gray-500 mt-1">Selamat datang di dashboard anggota. Di sini kamu bisa melihat status pinjaman dan melakukan aksi cepat.</p>
+                </div>
+
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ route('loan.borrow') }}" class="flex items-center gap-3 px-6 py-3 rounded-full text-white font-semibold tracking-wide shadow-md bg-gradient-to-r from-indigo-600 to-purple-600">
+                            <span class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                                <i class="fa-solid fa-box text-white text-lg"></i>
+                            </span>
+                            <span class="text-base">Pinjam Barang</span>
+                        </a>
+
+                        <a href="{{ route('loan.return') }}" class="flex items-center gap-3 px-5 py-3 rounded-xl text-white font-semibold tracking-wide shadow-sm bg-gradient-to-r from-emerald-500 to-teal-400">
+                            <span class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-white">
+                                <i class="fa-solid fa-rotate-left text-lg"></i>
+                            </span>
+                            <span class="font-medium text-sm">Kembalikan</span>
+                        </a>
+
+                        <a href="/history" class="flex items-center gap-3 px-5 py-3 rounded-xl text-white font-semibold tracking-wide shadow-sm bg-gradient-to-r from-amber-400 to-orange-400">
+                            <span class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-white">
+                                <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                            </span>
+                            <span class="font-medium text-sm">Riwayat</span>
+                        </a>
+
+                        <a href="/profile" class="flex items-center gap-3 px-5 py-3 rounded-xl text-white font-semibold tracking-wide shadow-sm bg-gradient-to-r from-sky-500 to-cyan-500">
+                            <span class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-white">
+                                <i class="fa-solid fa-user text-lg"></i>
+                            </span>
+                            <span class="font-medium text-sm">Profil</span>
+                        </a>
+                    </div>
+
+                    <div class="flex gap-4 mt-2 lg:mt-0">
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 w-44 flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-indigo-50 text-indigo-700">
+                                <i class="fa-solid fa-user-clock text-lg"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-xs text-gray-500">Sedang Dipinjam</div>
+                                <div class="text-2xl font-bold text-indigo-800">{{ $sedangDipinjam ?? 0 }}</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 w-44 flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-yellow-50 text-yellow-700">
+                                <i class="fa-solid fa-hourglass-half text-lg"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-xs text-gray-500">Menunggu Persetujuan</div>
+                                <div class="text-2xl font-bold text-gray-800">{{ $menungguPersetujuan ?? 0 }}</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 w-44 flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-red-50 text-red-600">
+                                <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-xs text-gray-500">Jatuh Tempo (3 hari)</div>
+                                <div class="text-2xl font-bold text-red-500">{{ $jatuhTempo ?? 0 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <a class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 group" href="/manage">

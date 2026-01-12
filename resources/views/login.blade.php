@@ -18,20 +18,68 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 animate-gradient min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4 relative overflow-auto">
 
-    <div class="w-full max-w-md">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
+    <style>
+        /* Live purple-themed background using SVG animated shapes */
+        .bg-anim {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(99,102,241,0.04) 0%, rgba(167,139,250,0.02) 50%, rgba(236,72,153,0.01) 100%);
+        }
+
+        .bg-svg { width: 100%; height: 100%; display: block; }
+
+        .shape { mix-blend-mode: screen; filter: url(#blur); opacity: 0.9; transform-origin: center; transform-box: fill-box; }
+
+        .s1 { animation: float1 12s ease-in-out infinite; }
+        .s2 { animation: float2 14s ease-in-out infinite; }
+        .s3 { animation: float3 10s ease-in-out infinite; }
+        .s4 { animation: float4 16s ease-in-out infinite; }
+
+        @keyframes float1 { 0%{transform:translate(0,0) scale(1);}50%{transform:translate(40px,-20px) scale(1.04);}100%{transform:translate(0,0) scale(1);} }
+        @keyframes float2 { 0%{transform:translate(0,0) scale(1);}50%{transform:translate(-30px,18px) scale(1.03);}100%{transform:translate(0,0) scale(1);} }
+        @keyframes float3 { 0%{transform:translate(0,0) scale(1);}50%{transform:translate(20px,-12px) scale(1.02);}100%{transform:translate(0,0) scale(1);} }
+        @keyframes float4 { 0%{transform:translate(0,0) scale(1);}50%{transform:translate(-18px,24px) scale(1.05);}100%{transform:translate(0,0) scale(1);} }
+
+        /* subtle overlay to increase contrast */
+        .bg-anim::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.36));
+            pointer-events: none;
+        }
+    </style>
+
+    <!-- tsParticles background container (replaces SVG shapes) -->
+    <style>
+        /* tsParticles background container */
+        .bg-anim { position: absolute; inset: 0; z-index: 0; background: linear-gradient(135deg, rgba(99,102,241,0.03) 0%, rgba(167,139,250,0.02) 50%); }
+        #tsparticles { width: 100%; height: 100%; }
+        .bg-anim::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.36)); pointer-events: none; }
+    </style>
+
+    <div class="bg-anim" aria-hidden="true">
+        <div id="tsparticles"></div>
+    </div>
+
+    <div class="w-full max-w-md relative z-10">
+        <div class="bg-white/40 backdrop-blur-md rounded-3xl p-8 border border-white/20" style="box-shadow: 0 12px 30px rgba(124,58,237,0.12);">
             {{-- Logo & Branding --}}
             <div class="text-center mb-8">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
-                    <img src="{{ asset('logo.png') }}" alt="Logo" class="w-full h-full object-contain">
+                <div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-500 p-1">
+                    <div class="w-full h-full rounded-xl bg-white/10 flex items-center justify-center">
+                        <img src="{{ asset('logo.png') }}" alt="Logo" class="w-4/5 h-4/5 object-contain">
+                    </div>
                 </div>
                 <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
                     Enuma Vault
                 </h1>
-                <h2 class="text-xl font-semibold text-gray-800">Selamat Datang Kembali</h2>
-                <p class="text-gray-500 mt-1">Silakan masuk ke akun Anda</p>
+                <h2 class="text-xl font-semibold text-purple-900/90">Selamat Datang Kembali</h2>
+                <p class="text-purple-800/70 mt-1">Silakan masuk ke akun Anda</p>
             </div>
 
             <form action="/login" method="POST" class="space-y-5">
@@ -40,14 +88,14 @@
                 {{-- Email Input --}}
                 <div>
                     <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-envelope text-gray-400"></i>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-envelope text-purple-700/70"></i>
+                            </div>
+                            <input type="email" name="email" id="email" required 
+                                   class="block w-full pl-12 pr-4 py-3 border border-transparent bg-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-purple-900 placeholder-purple-700/60"
+                                   placeholder="you@example.com">
                         </div>
-                        <input type="email" name="email" id="email" required 
-                               class="block w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                               placeholder="you@example.com">
-                    </div>
                 </div>
 
                 {{-- Password Input --}}
@@ -55,10 +103,10 @@
                     <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-lock text-gray-400"></i>
+                            <i class="fa-solid fa-lock text-purple-700/70"></i>
                         </div>
                         <input type="password" name="password" id="password" required
-                               class="block w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                               class="block w-full pl-12 pr-4 py-3 border border-transparent bg-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-purple-900 placeholder-purple-700/60"
                                placeholder="••••••••">
                     </div>
                 </div>
@@ -72,35 +120,59 @@
                     </div>
 
                     <div class="text-sm">
-                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Lupa password?</a>
+                        <a href="#" class="font-medium text-purple-700 hover:text-purple-600">Lupa password?</a>
                     </div>
                 </div>
 
                 {{-- Submit Button --}}
                 <div>
                     <button type="submit" 
-                            class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-base font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:shadow-lg transition-all">
+                            class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-md text-base font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
                         <i class="fa-solid fa-right-to-bracket mr-2"></i>
                         Masuk
                     </button>
                 </div>
+
             </form>
 
-            {{-- Register Link --}}
-            <p class="mt-8 text-center text-sm text-gray-600">
-                Belum punya akun?
-                <a href="/register" class="font-semibold text-indigo-600 hover:text-indigo-500">Daftar di sini</a>
-            </p>
+            {{-- Restore single register CTA --}}
+            <div class="mt-5">
+                <a href="/register" class="w-full inline-flex justify-center items-center py-3 px-4 rounded-xl border-2 border-white/20 text-purple-900 font-semibold bg-white/10 hover:bg-white/20 transition-all">
+                    <i class="fa-solid fa-user-plus mr-2"></i>
+                    Daftar Sekarang
+                </a>
+            </div>
+
         </div>
 
-        {{-- Footer Info --}}
-        <div class="mt-6 text-center">
-            <p class="text-sm text-gray-600">
-                <i class="fa-solid fa-shield-halved mr-1"></i>
-                Inventory Management System
-            </p>
-        </div>
     </div>
+
+    <!-- tsParticles scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            tsParticles.load('tsparticles', {
+                fullScreen: { enable: false },
+                detectRetina: true,
+                fpsLimit: 60,
+                background: { color: { value: 'transparent' } },
+                particles: {
+                    number: { value: 30, density: { enable: true, area: 800 } },
+                    color: { value: ['#7c3aed', '#8b5cf6', '#a78bfa', '#fb7185'] },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.7, random: { enable: true, minimumValue: 0.3 } },
+                    size: { value: { min: 20, max: 60 }, animation: { enable: true, speed: 6, minimumValue: 20, sync: false } },
+                    move: { enable: true, speed: 1.5, direction: 'none', outMode: 'out' },
+                    links: { enable: false }
+                },
+                interactivity: {
+                    detectsOn: 'canvas',
+                    events: { onHover: { enable: true, mode: 'repulse' }, onClick: { enable: false } },
+                    modes: { repulse: { distance: 120, duration: 0.4 } }
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

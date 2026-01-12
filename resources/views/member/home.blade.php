@@ -4,38 +4,75 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-            <h2 class="text-2xl font-bold text-gray-800">Halo, {{ Auth::user()->name }} 👋</h2>
-            <p class="text-sm text-gray-500 mt-1">Selamat datang di dashboard anggota. Di sini kamu bisa melihat status pinjaman dan melakukan aksi cepat.</p>
-            <div class="mt-4 flex gap-3 flex-wrap">
-                <a href="{{ route('loan.borrow') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-sm hover:opacity-95">
-                    <i class="fa-solid fa-box mr-1"></i> Pinjam Barang
-                </a>
-                <a href="{{ route('loan.return') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 shadow-sm hover:bg-gray-50">
-                    <i class="fa-solid fa-rotate-left mr-1"></i> Kembalikan
-                </a>
-                <a href="{{ route('history.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 shadow-sm hover:bg-gray-50">
-                    <i class="fa-solid fa-clock-rotate-left mr-1"></i> Riwayat
-                </a>
-                <a href="{{ route('profile.show') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 shadow-sm hover:bg-gray-50">
-                    <i class="fa-solid fa-user mr-1"></i> Profil
-                </a>
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="grid grid-cols-1 gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Halo, {{ Auth::user()->name }} 👋</h2>
+                <p class="text-sm text-gray-500 mt-1">Selamat datang di dashboard anggota. Di sini kamu bisa melihat status pinjaman dan melakukan aksi cepat.</p>
             </div>
-        </div>
 
-        <div class="flex gap-4 w-full sm:w-auto">
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center w-36">
-                <div class="text-xs text-gray-500">Sedang Dipinjam</div>
-                <div class="text-2xl font-bold text-gray-800">{{ $activeLoans }}</div>
-            </div>
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center w-36">
-                <div class="text-xs text-gray-500">Menunggu Persetujuan</div>
-                <div class="text-2xl font-bold text-gray-800">{{ $pendingLoans }}</div>
-            </div>
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center w-36">
-                <div class="text-xs text-gray-500">Jatuh Tempo (3 hari)</div>
-                <div class="text-2xl font-bold text-red-600">{{ $dueSoonLoans }}</div>
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
+                    <div class="flex gap-3 flex-nowrap overflow-x-auto no-scrollbar">
+                    <a href="{{ route('loan.borrow') }}" class="flex items-center gap-3 px-6 h-12 min-w-[180px] rounded-full text-white font-semibold tracking-wide shadow-md bg-gradient-to-r from-indigo-600 to-purple-600">
+                        <span class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                            <i class="fa-solid fa-box text-white text-lg"></i>
+                        </span>
+                        <span class="text-base">Pinjam Barang</span>
+                    </a>
+
+                    <a href="{{ route('loan.return') }}" class="flex items-center gap-3 px-5 h-12 min-w-[150px] rounded-xl text-white font-semibold tracking-wide shadow-sm bg-gradient-to-r from-emerald-500 to-teal-400">
+                        <span class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-white">
+                            <i class="fa-solid fa-rotate-left text-lg"></i>
+                        </span>
+                        <span class="font-medium text-sm">Kembalikan</span>
+                    </a>
+
+                    <a href="{{ route('history.index') }}" class="flex items-center gap-3 px-5 h-12 min-w-[150px] rounded-xl text-white font-semibold tracking-wide shadow-sm bg-gradient-to-r from-amber-400 to-orange-400">
+                        <span class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-white">
+                            <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                        </span>
+                        <span class="font-medium text-sm">Riwayat</span>
+                    </a>
+
+                    <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-5 h-12 min-w-[150px] rounded-xl text-white font-semibold tracking-wide shadow-sm bg-gradient-to-r from-sky-500 to-cyan-500">
+                        <span class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-white">
+                            <i class="fa-solid fa-user text-lg"></i>
+                        </span>
+                        <span class="font-medium text-sm">Profil</span>
+                    </a>
+                </div>
+
+                <div class="flex gap-4 mt-2 lg:mt-0">
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 w-44 flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-indigo-50 text-indigo-700">
+                            <i class="fa-solid fa-user-clock text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-xs text-gray-500">Sedang Dipinjam</div>
+                            <div class="text-2xl font-bold text-indigo-800">{{ $activeLoans }}</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 w-44 flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-yellow-50 text-yellow-700">
+                            <i class="fa-solid fa-hourglass-half text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-xs text-gray-500">Menunggu Persetujuan</div>
+                            <div class="text-2xl font-bold text-gray-800">{{ $pendingLoans }}</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 w-44 flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-red-50 text-red-600">
+                            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-xs text-gray-500">Jatuh Tempo (3 hari)</div>
+                            <div class="text-2xl font-bold text-red-600">{{ $dueSoonLoans }}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

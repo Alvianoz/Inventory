@@ -33,7 +33,7 @@
                         {{ $segments->reduce(function ($carry, $s) {return $carry + $s->products->count();}, 0) }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
-                    <i class="fa-solid fa-map-location-dot text-indigo-600"></i>
+                    <i class="fa-solid fa-boxes text-indigo-600"></i>
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
-                    <i class="fa-solid fa-map-location-dot text-indigo-600"></i>
+                    <i class="fa-solid fa-clock text-indigo-600"></i>
                 </div>
             </div>
         </div>
