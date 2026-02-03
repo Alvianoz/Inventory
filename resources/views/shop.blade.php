@@ -5,8 +5,7 @@
 @section('content')
     {{-- Success/Error Messages --}}
     @if (session('success'))
-        <div class="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-xl"
-            role="alert">
+        <div class="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-xl" role="alert">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg bg-green-500 flex items-center justify-center">
                     <i class="fa-solid fa-check text-white"></i>
@@ -107,12 +106,7 @@
                         data-stock="{{ $product->stock }}">
                         <div
                             class="w-full aspect-square bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center relative overflow-hidden">
-                            @if ($product->image_path)
-                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}"
-                                    class="w-full h-full object-cover">
-                            @else
-                                <i class="fa-solid fa-image text-6xl text-gray-300"></i>
-                            @endif
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
 
                             <div
                                 class="absolute inset-0 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -328,7 +322,7 @@
             window.location.href = url.toString();
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const productList = document.getElementById('product-list');
             const cartItemsContainer = document.getElementById('cart-items');
             const mobileCartItemsContainer = document.getElementById('mobile-cart-items');
@@ -367,7 +361,7 @@
 
             // QR Scanner Functions
             if (qrScannerBtn && qrScannerModal) {
-                qrScannerBtn.addEventListener('click', function() {
+                qrScannerBtn.addEventListener('click', function () {
                     qrScannerModal.classList.remove('hidden');
                     document.body.style.overflow = 'hidden';
                     startQrScanner();
@@ -375,7 +369,7 @@
             }
 
             if (closeQrScanner && qrScannerModal) {
-                closeQrScanner.addEventListener('click', function() {
+                closeQrScanner.addEventListener('click', function () {
                     stopQrScanner();
                     qrScannerModal.classList.add('hidden');
                     document.body.style.overflow = 'auto';
@@ -383,7 +377,7 @@
             }
 
             if (qrScannerModal) {
-                qrScannerModal.addEventListener('click', function(e) {
+                qrScannerModal.addEventListener('click', function (e) {
                     if (e.target === qrScannerModal) {
                         stopQrScanner();
                         qrScannerModal.classList.add('hidden');
@@ -396,14 +390,14 @@
                 html5QrCode = new Html5Qrcode("qr-reader");
 
                 html5QrCode.start({
-                        facingMode: "environment"
-                    }, {
-                        fps: 10,
-                        qrbox: {
-                            width: 250,
-                            height: 250
-                        }
-                    },
+                    facingMode: "environment"
+                }, {
+                    fps: 10,
+                    qrbox: {
+                        width: 250,
+                        height: 250
+                    }
+                },
                     (decodedText, decodedResult) => {
                         // Extract product ID from URL
                         try {
@@ -490,21 +484,21 @@
 
             // Mobile cart toggle
             if (mobileCartToggle && mobileCartModal) {
-                mobileCartToggle.addEventListener('click', function() {
+                mobileCartToggle.addEventListener('click', function () {
                     mobileCartModal.classList.remove('hidden');
                     document.body.style.overflow = 'hidden';
                 });
             }
 
             if (closeMobileCart && mobileCartModal) {
-                closeMobileCart.addEventListener('click', function() {
+                closeMobileCart.addEventListener('click', function () {
                     mobileCartModal.classList.add('hidden');
                     document.body.style.overflow = 'auto';
                 });
             }
 
             if (mobileCartModal) {
-                mobileCartModal.addEventListener('click', function(e) {
+                mobileCartModal.addEventListener('click', function (e) {
                     if (e.target === mobileCartModal) {
                         mobileCartModal.classList.add('hidden');
                         document.body.style.overflow = 'auto';
@@ -527,33 +521,33 @@
 
                 if (cart.length === 0) {
                     container.innerHTML = `
-                        <div class="text-center text-gray-500 py-8">
-                            <i class="fa-solid fa-shopping-cart text-4xl text-gray-300 mb-2"></i>
-                            <p>Keranjang masih kosong</p>
-                        </div>
-                    `;
+                            <div class="text-center text-gray-500 py-8">
+                                <i class="fa-solid fa-shopping-cart text-4xl text-gray-300 mb-2"></i>
+                                <p>Keranjang masih kosong</p>
+                            </div>
+                        `;
                 } else {
                     cart.forEach(item => {
                         const itemHtml = `
-                            <div class="cart-item flex justify-between items-center bg-gradient-to-r from-gray-50 to-indigo-50 p-3 rounded-xl border border-gray-100">
-                                <div class="flex-1 min-w-0">
-                                    <p class="font-semibold text-gray-800 text-sm truncate">${item.name}</p>
-                                    <p class="text-xs text-gray-500">Rp ${formatRupiah(item.price)}</p>
+                                <div class="cart-item flex justify-between items-center bg-gradient-to-r from-gray-50 to-indigo-50 p-3 rounded-xl border border-gray-100">
+                                    <div class="flex-1 min-w-0">
+                                        <p class="font-semibold text-gray-800 text-sm truncate">${item.name}</p>
+                                        <p class="text-xs text-gray-500">Rp ${formatRupiah(item.price)}</p>
+                                    </div>
+                                    <div class="flex items-center space-x-2 ml-2">
+                                        <button type="button" class="cart-quantity-btn w-8 h-8 flex items-center justify-center text-indigo-600 hover:text-indigo-800 bg-white rounded-lg border border-indigo-200 hover:border-indigo-400 transition-all" data-id="${item.id}" data-action="decrease">
+                                            <i class="fa-solid fa-minus text-xs"></i>
+                                        </button>
+                                        <span class="font-bold text-sm min-w-[2rem] text-center text-indigo-600">${item.quantity}</span>
+                                        <button type="button" class="cart-quantity-btn w-8 h-8 flex items-center justify-center text-indigo-600 hover:text-indigo-800 bg-white rounded-lg border border-indigo-200 hover:border-indigo-400 transition-all" data-id="${item.id}" data-action="increase">
+                                            <i class="fa-solid fa-plus text-xs"></i>
+                                        </button>
+                                        <button type="button" class="cart-remove-btn text-red-500 hover:text-red-700 ml-1 w-8 h-8 flex items-center justify-center bg-red-50 rounded-lg hover:bg-red-100 transition-all" data-id="${item.id}">
+                                            <i class="fa-solid fa-trash text-xs"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="flex items-center space-x-2 ml-2">
-                                    <button type="button" class="cart-quantity-btn w-8 h-8 flex items-center justify-center text-indigo-600 hover:text-indigo-800 bg-white rounded-lg border border-indigo-200 hover:border-indigo-400 transition-all" data-id="${item.id}" data-action="decrease">
-                                        <i class="fa-solid fa-minus text-xs"></i>
-                                    </button>
-                                    <span class="font-bold text-sm min-w-[2rem] text-center text-indigo-600">${item.quantity}</span>
-                                    <button type="button" class="cart-quantity-btn w-8 h-8 flex items-center justify-center text-indigo-600 hover:text-indigo-800 bg-white rounded-lg border border-indigo-200 hover:border-indigo-400 transition-all" data-id="${item.id}" data-action="increase">
-                                        <i class="fa-solid fa-plus text-xs"></i>
-                                    </button>
-                                    <button type="button" class="cart-remove-btn text-red-500 hover:text-red-700 ml-1 w-8 h-8 flex items-center justify-center bg-red-50 rounded-lg hover:bg-red-100 transition-all" data-id="${item.id}">
-                                        <i class="fa-solid fa-trash text-xs"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        `;
+                            `;
                         container.insertAdjacentHTML('beforeend', itemHtml);
                     });
                 }
@@ -595,11 +589,11 @@
                 notification.className =
                     `fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg ${type === 'success' ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gradient-to-r from-red-500 to-rose-500'} text-white transform translate-x-full transition-transform duration-300`;
                 notification.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'} text-xl"></i>
-                        <span class="font-medium">${message}</span>
-                    </div>
-                `;
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'} text-xl"></i>
+                            <span class="font-medium">${message}</span>
+                        </div>
+                    `;
 
                 document.body.appendChild(notification);
 
@@ -611,7 +605,7 @@
             }
 
             if (productList) {
-                productList.addEventListener('click', function(e) {
+                productList.addEventListener('click', function (e) {
                     if (e.target.closest('.add-to-cart-btn') && !e.target.closest('.add-to-cart-btn')
                         .disabled) {
                         const card = e.target.closest('.product-card');
@@ -704,11 +698,11 @@
 
             renderCart();
 
-            setTimeout(function() {
+            setTimeout(function () {
                 const alerts = document.querySelectorAll('.bg-gradient-to-r');
                 alerts.forEach(alert => {
                     if (alert.classList.contains('from-green-50') || alert.classList.contains(
-                            'from-red-50')) {
+                        'from-red-50')) {
                         alert.style.transition = 'opacity 0.5s';
                         alert.style.opacity = '0';
                         setTimeout(() => alert.remove(), 500);

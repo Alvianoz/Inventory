@@ -65,6 +65,7 @@
             <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-xl">{{ session('success') }}</div>
         @endif
 
+        @if($segments->count() > 0)
         <div id="segments-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($segments as $segment)
                 <div class="segment-card bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col justify-between min-h-[14rem]"
@@ -77,15 +78,10 @@
                                 </p>
                             </div>
                             <div class="ml-4 flex-shrink-0 text-right">
-                                @if ($segment->image_path)
-                                    <img src="{{ Storage::url($segment->image_path) }}" alt="{{ $segment->name }}"
-                                        class="w-20 h-20 object-cover border rounded-lg inline-block" />
-                                @else
-                                    <a href="{{ route('segments.qr.show', $segment->id) }}" title="Lihat QR Segmen">
-                                        <img src="https://chart.googleapis.com/chart?chs=120x120&cht=qr&chl={{ urlencode(url('/return/segment/' . $segment->id)) }}"
-                                            alt="Segmen {{ $segment->name }}" class="w-20 h-20 border rounded-lg inline-block" />
-                                    </a>
-                                @endif
+                                <img src="{{ $segment->image_url }}" alt="{{ $segment->name }}" class="w-20 h-20 object-cover border rounded-lg inline-block segment-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                <div class="w-20 h-20 bg-gray-100 border rounded-lg flex items-center justify-center hidden segment-placeholder">
+                                    <i class="fa-solid fa-image text-gray-400 text-2xl"></i>
+                                </div>
                             </div>
                         </div>
 
@@ -105,7 +101,7 @@
 
                         <div class="flex items-center gap-2">
                             <button type="button" class="edit-segment-btn px-3 py-2 rounded-xl bg-yellow-50 text-yellow-700 text-sm"
-                                data-id="{{ $segment->id }}" data-name="{{ e($segment->name) }}" data-description="{{ e($segment->description ?? '') }}" data-image="{{ $segment->image_path ? Storage::url($segment->image_path) : '' }}">Edit</button>
+                                data-id="{{ $segment->id }}" data-name="{{ e($segment->name) }}" data-description="{{ e($segment->description ?? '') }}" data-image="{{ $segment->image_url }}">Edit</button>
                             <form action="{{ route('segments.destroy', $segment->id) }}" method="POST"
                                 class="inline-block" onsubmit="return confirm('Hapus segmen ini?');">
                                 @csrf
@@ -116,14 +112,16 @@
                     </div>
                 </div>
             @empty
-                <div class="sm:col-span-2 lg:col-span-3 text-center py-20">
-                    <i class="fa-solid fa-map-location-dot text-6xl text-gray-300 mb-4"></i>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Belum ada segmen.</h3>
-                    <a href="{{ route('segments.create') }}" class="text-indigo-600 hover:text-indigo-700 font-medium"><i
-                            class="fa-solid fa-plus-circle mr-2"></i>Tambah segmen pertama</a>
-                </div>
             @endforelse
         </div>
+        @else
+        <div class="text-center py-20 bg-white rounded-2xl border border-gray-100">
+            <i class="fa-solid fa-map-location-dot text-6xl text-gray-300 mb-4 block"></i>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Belum ada segmen.</h3>
+            <a href="{{ route('segments.create') }}" class="text-indigo-600 hover:text-indigo-700 font-medium"><i
+                    class="fa-solid fa-plus-circle mr-2"></i>Tambah segmen pertama</a>
+        </div>
+        @endif
     </div>
 
     <!-- Create Modal -->

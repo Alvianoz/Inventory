@@ -16,8 +16,19 @@ class Segment extends Model
         'image_path',
     ];
 
+    protected $appends = ['image_url'];
+
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if ($this->image_path) {
+            return asset('storage/' . $this->image_path);
+        }
+
+        return asset('assets/default.png');
     }
 }

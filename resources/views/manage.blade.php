@@ -66,12 +66,7 @@
                         class="bg-white rounded-2xl shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-300 border border-gray-100">
                         <div
                             class="w-full aspect-square bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center relative">
-                            @if ($product->image_path)
-                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}"
-                                    class="w-full h-full object-cover">
-                            @else
-                                <i class="fa-solid fa-image text-6xl text-gray-300"></i>
-                            @endif
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
 
                             @if ($product->stock <= 1)
                                 <div
@@ -115,7 +110,7 @@
                                         data-stock="{{ $product->stock }}"
                                         data-category="{{ $product->category }}"
                                         data-segment-id="{{ $product->segment_id }}"
-                                        data-image-url="{{ $product->image_path ? asset('storage/' . $product->image_path) : '' }}">
+                                        data-image-url="{{ $product->image_url }}">
                                         <i class="fa-solid fa-edit mr-1"></i>Edit
                                     </button>
                                     <button

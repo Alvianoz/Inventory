@@ -24,13 +24,11 @@ use Illuminate\Support\Facades\Storage;
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Gambar</label>
-                @if($segment->image_path)
                     <div class="mb-3">
-                        <img src="{{ Storage::url($segment->image_path) }}" alt="{{ $segment->name }}" 
+                        <img src="{{ $segment->image_url }}" alt="{{ $segment->name }}" 
                              class="w-32 h-32 object-cover rounded-lg border border-gray-200">
                         <p class="mt-1 text-xs text-gray-500">Gambar saat ini</p>
                     </div>
-                @endif
                 <input type="file" name="image_path" accept="image/*"
                     class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-indigo-50 file:to-purple-50 file:text-indigo-700" />
                 <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, GIF. Maksimal 2MB. Kosongkan jika tidak ingin mengubah gambar.</p>

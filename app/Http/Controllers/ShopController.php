@@ -75,7 +75,7 @@ class ShopController extends Controller
                 'price' => $product->price,
                 'stock' => $product->stock,
                 'category' => $product->category,
-                'image_path' => $product->image_path ? asset('storage/' . $product->image_path) : null,
+                'image_path' => $product->image_url,
             ]
         ]);
     }

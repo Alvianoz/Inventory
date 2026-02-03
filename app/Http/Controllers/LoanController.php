@@ -132,7 +132,7 @@ class LoanController extends Controller
                 'stock' => $product->stock,
                 'reserved_stock' => $product->reserved_stock,
                 'available_stock' => max(0, $availableStock),
-                'image_path' => $product->image_path ? asset('storage/' . $product->image_path) : null,
+                'image_path' => $product->image_url,
             ]
         ]);
     }

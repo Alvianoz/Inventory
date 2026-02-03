@@ -10,7 +10,7 @@
                 <p class="text-sm text-gray-500">Kode: {{ $segment->code }}</p>
             </div>
             <div class="text-right">
-                <img src="{{ Storage::url($segment->image_path) }}" alt="{{ $segment->name }}" class="w-20 h-20 object-cover border rounded-lg inline-block" />
+                <img src="{{ $segment->image_url }}" alt="{{ $segment->name }}" class="w-20 h-20 object-cover border rounded-lg inline-block" />
             </div>
         </div>
 
