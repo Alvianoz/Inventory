@@ -56,7 +56,7 @@ class ProductController extends Controller
         }
 
         $products = $query->latest()->get();
-        $segments = Segment::all();
+        $segments = Segment::orderBy('name', 'asc')->get();
         $totalProducts = Product::count();
         $categories = $allCategories;
 
